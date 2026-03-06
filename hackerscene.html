@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hacker Cinematic Loop</title>
+  <style>
+    body { margin:0; background:black; overflow:hidden; }
+    canvas { display:block; }
+  </style>
+</head>
+<body>
+  <audio id="bgmusic" src="files/theme.mp3" autoplay loop></audio>
+  <canvas id="scene"></canvas>
+
+  <script>
+    const canvas = document.getElementById("scene");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let scene = 0; 
+    let frame = 0;
+
+    function hackerTyping() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = "lime";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(200,150,40,0,Math.PI*2); // head
+      ctx.stroke();
+      ctx.strokeRect(250,250,200,120); // laptop
+      ctx.fillStyle = "rgba(0,255,0,0.2)";
+      ctx.fillRect(250,250,200,120);
+      ctx.fillStyle = "lime";
+      if(frame%30<15) ctx.fillText("typing...",270,300);
+    }
+
+    function zoomLaptop() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = "lime";
+      ctx.font = "40px Courier";
+      ctx.fillText("Zooming into laptop...", canvas.width/2-200, canvas.height/2);
+    }
+
+    function codeFlow() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = "cyan";
+      ctx.lineWidth = 2;
+      for(let i=0;i<10;i++){
+        ctx.beginPath();
+        ctx.moveTo(100,100+i*50);
+        ctx.bezierCurveTo(300,200,500,0,canvas.width-100,100+i*50);
+        ctx.stroke();
+        ctx.fillStyle = "lime";
+        ctx.fillText("101010", 150+(frame%300), 100+i*50);
+      }
+    }
+
+    function fightScene() {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      // Female code silhouette
+      ctx.strokeStyle = "lime";
+      ctx.beginPath();
+      ctx.arc(300+Math.sin(frame/20)*50,300,40,0,Math.PI*2);
+      ctx.stroke();
+      // Firewall opponent
+      ctx.strokeStyle = "red";
+      ctx.beginPath();
+      ctx.arc(600+Math.cos(frame/25)*50,300,40,0,Math.PI*2);
+      ctx.stroke();
+      // Clash effect
+      ctx.strokeStyle = "yellow";
+      ctx.beginPath();
+      ctx.moveTo(350,300);
+      ctx.lineTo(550,300);
+      ctx.stroke();
+    }
+
+    function animate() {
+      frame++;
+      if(scene===0){ hackerTyping(); if(frame>300){scene=1; frame=0;} } // 5s
+      else if(scene===1){ zoomLaptop(); if(frame>120){scene=2; frame=0;} } // 2s
+      else if(scene===2){ codeFlow(); if(frame>600){scene=3; frame=0;} } // 10s
+      else if(scene===3){ fightScene(); if(frame>10800){scene=4; frame=0;} } // 3min
+      else if(scene===4){ scene=0; frame=0; } // loop back
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
